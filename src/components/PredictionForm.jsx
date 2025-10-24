@@ -146,8 +146,8 @@ export default function PredictionForm() {
             </svg>
           </div>
         </div>
-        <h2 className="text-4xl font-bold gradient-text mb-3">Student Performance Prediction</h2>
-        <p className="text-gray-400 text-lg">Enter student information to get AI-powered predictions</p>
+  <h2 className="text-4xl font-bold gradient-text mb-3">Student Performance Prediction</h2>
+  <p className="text-gray-400 text-lg">Guide to Your OWN Success</p>
         <div className="flex items-center justify-center gap-2 mt-3">
           <span className="ai-badge">🤖 Machine Learning</span>
           <span className="ai-badge">📊 Data Analysis</span>

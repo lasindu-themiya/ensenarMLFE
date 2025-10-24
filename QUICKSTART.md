@@ -1,4 +1,4 @@
-# Quick Start Guide - Ensenar ML Frontend
+# Quick Start Guide - Ensenar Frontend
 
 ## 🚀 Getting Started in 3 Steps
 
@@ -17,7 +17,7 @@ node server.js
 
 Make sure you see:
 ```
-🚀 Ensenar ML Backend is running on port 5000
+🚀 Ensenar Backend is running on port 5000
 ```
 
 ### Step 3: Start the Frontend

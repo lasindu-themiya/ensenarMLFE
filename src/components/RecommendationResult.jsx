@@ -88,6 +88,13 @@ export default function RecommendationResult({ result, onClose }) {
       exit={{ opacity: 0 }}
       className="min-h-screen bg-gradient-to-br from-gray-900 via-purple-900/20 to-gray-900 py-8"
     >
+      {/* Print-only header */}
+      <div className="print-header hidden">
+        <h1 className="text-3xl font-bold text-purple-900">Ensenar - AI Performance Analysis Report</h1>
+        <p className="text-gray-700 mt-2">Guide to Your OWN Success</p>
+        <p className="text-sm text-gray-600 mt-1">Generated on {new Date().toLocaleDateString()}</p>
+      </div>
+
       <div className="container mx-auto px-4 max-w-7xl">
         {/* Header */}
         <motion.div
@@ -193,7 +200,7 @@ export default function RecommendationResult({ result, onClose }) {
         )}
 
         {/* Tabs */}
-        <div className="mb-6 flex gap-4 border-b border-gray-700">
+        <div className="mb-6 flex gap-4 border-b border-gray-700 no-print">
           <button
             onClick={() => setSelectedTab('overview')}
             className={`px-6 py-3 font-semibold transition-colors border-b-2 ${
@@ -226,7 +233,123 @@ export default function RecommendationResult({ result, onClose }) {
           </button>
         </div>
 
-        {/* Tab Content */}
+        {/* Tab Content - Show all in print */}
+        <div className="print:block hidden print-all-tabs">
+          {/* Overview Section */}
+          {result.current_status_analysis && (
+            <div className="space-y-6 mb-8 print-section">
+              <h2 className="text-2xl font-bold text-white mb-4">📊 Current Status Analysis</h2>
+              <div className="card p-6">
+                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+                  {Object.entries(result.current_status_analysis.key_factors).map(([key, factor], index) => (
+                    <div
+                      key={key}
+                      className="bg-gray-800/50 rounded-lg p-4 border border-gray-700"
+                    >
+                      <div className="flex justify-between items-start mb-2">
+                        <h4 className="font-semibold text-white capitalize">
+                          {key.replace(/_/g, ' ')}
+                        </h4>
+                        <span className={`text-xs px-2 py-1 rounded-full ${
+                          factor.status === 'GOOD' ? 'bg-green-500/20 text-green-400' :
+                          factor.status === 'MODERATE' ? 'bg-yellow-500/20 text-yellow-400' :
+                          factor.status === 'LOW' || factor.status === 'BELOW OPTIMAL' ? 'bg-red-500/20 text-red-400' :
+                          'bg-gray-500/20 text-gray-400'
+                        }`}>
+                          {factor.status}
+                        </span>
+                      </div>
+                      <p className="text-gray-400 text-sm">{factor.impact}</p>
+                    </div>
+                  ))}
+                </div>
+              </div>
+            </div>
+          )}
+
+          {/* Recommendations Section */}
+          {result.prioritized_recommendations && (
+            <div className="space-y-4 mb-8 print-section">
+              <h2 className="text-2xl font-bold text-white mb-4">🚀 Priority Recommendations</h2>
+              {result.prioritized_recommendations.map((rec, index) => (
+                <div
+                  key={index}
+                  className="card p-6"
+                >
+                  <div className="flex items-start gap-4">
+                    <div className={`flex-shrink-0 w-12 h-12 bg-gradient-to-br ${getPriorityColor(rec.priority)} rounded-lg flex items-center justify-center text-white font-bold text-lg`}>
+                      #{index + 1}
+                    </div>
+                    <div className="flex-1">
+                      <div className="flex justify-between items-start mb-3">
+                        <div>
+                          <h3 className="text-xl font-bold text-white">{rec.feature}</h3>
+                          <span className={`inline-block mt-1 text-xs px-3 py-1 rounded-full ${
+                            rec.priority === 'CRITICAL' ? 'bg-red-500/20 text-red-400' :
+                            rec.priority === 'HIGH' ? 'bg-orange-500/20 text-orange-400' :
+                            'bg-yellow-500/20 text-yellow-400'
+                          }`}>
+                            {rec.priority} Priority
+                          </span>
+                        </div>
+                        <div className="text-right">
+                          <div className="text-2xl font-bold text-green-400">{rec.improvement}</div>
+                          <div className="text-xs text-gray-400">Improvement</div>
+                        </div>
+                      </div>
+                      
+                      <div className="bg-gray-800/50 rounded-lg p-4 mb-3">
+                        <div className="grid grid-cols-2 gap-4 mb-3">
+                          <div>
+                            <div className="text-xs text-gray-400 mb-1">Current</div>
+                            <div className="text-white font-semibold">{rec.current}</div>
+                          </div>
+                          <div>
+                            <div className="text-xs text-gray-400 mb-1">Suggested</div>
+                            <div className="text-green-400 font-semibold">{rec.suggested}</div>
+                          </div>
+                        </div>
+                        <div className="text-sm text-gray-300">
+                          <strong className="text-white">Why: </strong>{rec.reason}
+                        </div>
+                      </div>
+
+                      <div className="flex items-center justify-between bg-blue-500/10 rounded-lg p-3 border border-blue-500/30">
+                        <span className="text-sm text-gray-300">New Success Rate:</span>
+                        <span className="text-lg font-bold text-blue-400">{rec.new_probability}</span>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              ))}
+            </div>
+          )}
+
+          {/* Success Tips Section */}
+          {result.combined_effect?.success_tips && (
+            <div className="mb-8 print-section">
+              <h2 className="text-2xl font-bold text-white mb-4">💡 Success Tips</h2>
+              <div className="card p-8">
+                <div className="space-y-4">
+                  {result.combined_effect.success_tips.map((tip, index) => (
+                    <div
+                      key={index}
+                      className="flex items-start gap-4 bg-gray-800/50 rounded-lg p-4"
+                    >
+                      <div className="flex-shrink-0 w-8 h-8 bg-gradient-to-br from-purple-500 to-blue-500 rounded-full flex items-center justify-center text-white font-bold">
+                        {index + 1}
+                      </div>
+                      <p className="text-gray-300 text-lg flex-1">{tip}</p>
+                    </div>
+                  ))}
+                </div>
+              </div>
+            </div>
+          )}
+        </div>
+
+        {/* Tab Content - Interactive (screen only) */}
+        <div className="print:hidden">
         <AnimatePresence mode="wait">
           {selectedTab === 'overview' && (
             <motion.div
@@ -365,13 +488,14 @@ export default function RecommendationResult({ result, onClose }) {
             </motion.div>
           )}
         </AnimatePresence>
+        </div>
 
         {/* Action Buttons */}
         <motion.div
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
           transition={{ delay: 0.6 }}
-          className="mt-8 flex gap-4"
+          className="mt-8 flex gap-4 no-print"
         >
           <button
             onClick={onClose}
@@ -389,6 +513,11 @@ export default function RecommendationResult({ result, onClose }) {
             Print Report
           </button>
         </motion.div>
+      </div>
+
+      {/* Print-only footer */}
+      <div className="print-footer hidden">
+        <p>© 2025 Ensenar - Guide to Your OWN Success | AI-Powered Performance Analysis</p>
       </div>
     </motion.div>
   );

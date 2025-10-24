@@ -1,4 +1,4 @@
-# 🎓 Ensenar ML Frontend - Complete Setup Summary
+# 🎓 Ensenar Frontend - Complete Setup Summary
 
 ## ✅ What Was Created
 

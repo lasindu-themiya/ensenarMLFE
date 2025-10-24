@@ -2,7 +2,7 @@
 
 ## What's New? 🚀
 
-Your Ensenar ML project now has a **complete AI/ML themed makeover** with:
+Your Ensenar project now has a **complete AI/ML themed makeover** with:
 
 ### ✨ Visual Enhancements
 - 🎨 **Purple-Blue-Cyan Gradient Theme** throughout

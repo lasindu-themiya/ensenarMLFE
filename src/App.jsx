@@ -51,9 +51,9 @@ function App() {
                 </svg>
               </div>
               <div>
-                <h1 className="text-3xl font-bold gradient-text">Ensenar ML</h1>
+                <h1 className="text-3xl font-bold gradient-text">Ensenar</h1>
                 <div className="flex items-center gap-2 mt-1">
-                  <p className="text-gray-400 text-sm">AI-Powered Student Performance Prediction</p>
+                  <p className="text-gray-400 text-sm">Guide to Your OWN Success</p>
                   <span className="ai-badge">🤖 Neural Network</span>
                 </div>
               </div>
@@ -125,7 +125,7 @@ function App() {
             </div>
           </div>
           <div className="text-center mt-6 pt-6 border-t border-gray-700/50">
-            <p className="text-gray-500 text-sm">© 2025 Ensenar ML - Empowering Students with AI</p>
+            <p className="text-gray-500 text-sm">© 2025 Ensenar - Guide to Your OWN Success</p>
           </div>
         </div>
       </motion.footer>

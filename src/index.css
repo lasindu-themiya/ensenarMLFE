@@ -158,3 +158,460 @@
       radial-gradient(circle at 50% 50%, rgba(139, 92, 246, 0.05) 0%, transparent 50%);
   }
 }
+
+/* Print Styles for PDF Generation */
+@media print {
+  /* Page Setup */
+  @page {
+    size: A4 portrait;
+    margin: 15mm 10mm;
+  }
+
+  /* Reset margins on first page */
+  @page :first {
+    margin-top: 10mm;
+  }
+
+  /* Global Print Styles */
+  * {
+    -webkit-print-color-adjust: exact !important;
+    print-color-adjust: exact !important;
+    color-adjust: exact !important;
+  }
+
+  body {
+    @apply bg-white text-gray-900;
+    width: 100%;
+    margin: 0;
+    padding: 0;
+  }
+
+  /* Hide unnecessary elements */
+  header,
+  footer,
+  button:not(.keep-in-print),
+  .no-print {
+    display: none !important;
+  }
+
+  /* Show print-only elements */
+  .print-header,
+  .print-footer,
+  .print-all-tabs {
+    display: block !important;
+  }
+
+  /* Container adjustments */
+  .container {
+    max-width: 100% !important;
+    padding: 0 5mm !important;
+    margin: 0 !important;
+  }
+
+  /* Cards and sections */
+  .card {
+    @apply border border-gray-300;
+    background: white !important;
+    box-shadow: none !important;
+    page-break-inside: avoid;
+    margin-bottom: 8mm !important;
+    padding: 8mm !important;
+    break-inside: avoid;
+  }
+
+  /* Print sections with better page breaks */
+  .print-section {
+    page-break-before: auto;
+    page-break-after: auto;
+    page-break-inside: avoid;
+    margin-bottom: 10mm;
+  }
+
+  /* Prevent page breaks inside important elements */
+  .card,
+  .grid > div,
+  table,
+  ul,
+  ol,
+  pre,
+  blockquote {
+    page-break-inside: avoid;
+    break-inside: avoid;
+  }
+
+  /* Headings - keep with next content */
+  h1, h2, h3, h4, h5, h6 {
+    page-break-after: avoid;
+    page-break-inside: avoid;
+    break-after: avoid;
+    break-inside: avoid;
+    @apply text-gray-900;
+    margin-top: 5mm;
+    margin-bottom: 3mm;
+  }
+
+  h1 {
+    font-size: 24pt !important;
+  }
+
+  h2 {
+    font-size: 18pt !important;
+  }
+
+  h3 {
+    font-size: 14pt !important;
+  }
+
+  /* Text colors for print */
+  .text-gray-100,
+  .text-gray-200,
+  .text-gray-300,
+  .text-white {
+    @apply text-gray-900 !important;
+  }
+
+  .text-gray-400,
+  .text-gray-500 {
+    @apply text-gray-700 !important;
+  }
+
+  .text-gray-600 {
+    @apply text-gray-800 !important;
+  }
+
+  /* Gradient text - convert to solid for print */
+  .gradient-text {
+    background: none !important;
+    -webkit-background-clip: initial !important;
+    background-clip: initial !important;
+    -webkit-text-fill-color: initial !important;
+    @apply text-purple-900 font-bold;
+  }
+
+  /* Preserve gradient backgrounds as solid colors */
+  .bg-gradient-to-r,
+  .bg-gradient-to-br,
+  .bg-gradient-to-b,
+  .from-purple-600,
+  .from-purple-500,
+  .to-blue-600,
+  .to-blue-500 {
+    background: linear-gradient(135deg, #9333ea 0%, #2563eb 100%) !important;
+    -webkit-print-color-adjust: exact;
+    color: white !important;
+  }
+
+  /* Priority color boxes */
+  .from-red-500.to-red-600 {
+    background: linear-gradient(135deg, #ef4444 0%, #dc2626 100%) !important;
+  }
+
+  .from-orange-500.to-orange-600 {
+    background: linear-gradient(135deg, #f97316 0%, #ea580c 100%) !important;
+  }
+
+  .from-yellow-500.to-yellow-600 {
+    background: linear-gradient(135deg, #eab308 0%, #ca8a04 100%) !important;
+  }
+
+  .from-green-400.to-emerald-500 {
+    background: linear-gradient(135deg, #4ade80 0%, #10b981 100%) !important;
+  }
+
+  .from-blue-400.to-cyan-500 {
+    background: linear-gradient(135deg, #60a5fa 0%, #06b6d4 100%) !important;
+  }
+
+  /* Borders */
+  .border-gray-700,
+  .border-gray-600 {
+    @apply border-gray-300 !important;
+  }
+
+  .border-purple-500\/30 {
+    @apply border-purple-400 !important;
+  }
+
+  /* Progress bars and visual elements */
+  svg,
+  circle,
+  path {
+    -webkit-print-color-adjust: exact !important;
+    print-color-adjust: exact !important;
+  }
+
+  /* Circular progress */
+  svg circle[stroke] {
+    stroke-opacity: 1 !important;
+  }
+
+  /* Grid layouts */
+  .grid {
+    display: grid !important;
+    gap: 5mm !important;
+  }
+
+  .grid-cols-2 {
+    grid-template-columns: 1fr 1fr !important;
+  }
+
+  .grid-cols-3 {
+    grid-template-columns: 1fr 1fr 1fr !important;
+  }
+
+  /* Ensure proper spacing */
+  .space-y-6 > * + * {
+    margin-top: 8mm !important;
+  }
+
+  .space-y-4 > * + * {
+    margin-top: 5mm !important;
+  }
+
+  .space-y-3 > * + * {
+    margin-top: 3mm !important;
+  }
+
+  .mb-8 {
+    margin-bottom: 8mm !important;
+  }
+
+  .mb-6 {
+    margin-bottom: 6mm !important;
+  }
+
+  .mb-4 {
+    margin-bottom: 4mm !important;
+  }
+
+  /* Badge elements */
+  .ai-badge {
+    @apply bg-purple-100 text-purple-900 border-purple-300;
+    display: inline-block;
+    padding: 2mm 3mm;
+  }
+
+  /* Hide tab navigation */
+  [role="tablist"],
+  .tabs,
+  button[role="tab"] {
+    display: none !important;
+  }
+
+  /* Recommendation cards */
+  .hover\:shadow-xl,
+  .hover\:bg-gray-800\/70 {
+    box-shadow: none !important;
+  }
+
+  /* Status colors - preserve */
+  .text-green-400,
+  .text-green-500 {
+    @apply text-green-700 !important;
+  }
+
+  .text-red-400,
+  .text-red-500 {
+    @apply text-red-700 !important;
+  }
+
+  .text-yellow-400,
+  .text-yellow-500 {
+    @apply text-yellow-700 !important;
+  }
+
+  .text-blue-400,
+  .text-blue-500 {
+    @apply text-blue-700 !important;
+  }
+
+  .text-purple-400,
+  .text-purple-300 {
+    @apply text-purple-700 !important;
+  }
+
+  /* Background colors */
+  .bg-gray-800,
+  .bg-gray-900,
+  .bg-gray-800\/50,
+  .bg-gray-800\/90 {
+    @apply bg-gray-50 !important;
+    border: 1px solid #e5e7eb !important;
+  }
+
+  .bg-gray-700 {
+    @apply bg-gray-100 !important;
+  }
+
+  /* Semi-transparent backgrounds */
+  .bg-green-500\/20 {
+    @apply bg-green-100 !important;
+  }
+
+  .bg-yellow-500\/20 {
+    @apply bg-yellow-100 !important;
+  }
+
+  .bg-red-500\/20 {
+    @apply bg-red-100 !important;
+  }
+
+  .bg-blue-500\/10 {
+    @apply bg-blue-50 !important;
+  }
+
+  /* Ensure content doesn't overflow */
+  * {
+    overflow: visible !important;
+    max-width: 100%;
+  }
+
+  /* Print-specific header */
+  .print-header {
+    display: block !important;
+    text-align: center;
+    margin-bottom: 10mm;
+    padding-bottom: 5mm;
+    border-bottom: 2px solid #9333ea;
+    page-break-after: avoid;
+  }
+
+  /* Page footer */
+  .print-footer {
+    display: block !important;
+    position: fixed;
+    bottom: 5mm;
+    left: 0;
+    right: 0;
+    text-align: center;
+    font-size: 9pt;
+    color: #666;
+    padding-top: 3mm;
+    border-top: 1px solid #e5e7eb;
+  }
+
+  /* Animations - disable for print */
+  *,
+  *::before,
+  *::after {
+    animation: none !important;
+    transition: none !important;
+    animation-duration: 0s !important;
+    animation-delay: 0s !important;
+  }
+
+  /* Links */
+  a {
+    color: inherit;
+    text-decoration: none;
+  }
+
+  a[href]:after {
+    content: none !important;
+  }
+
+  /* Ensure proper width */
+  .max-w-7xl,
+  .max-w-5xl {
+    max-width: 100% !important;
+  }
+
+  /* Floating elements */
+  .fixed,
+  .absolute {
+    position: relative !important;
+  }
+
+  /* Backdrop blur - remove for print */
+  .backdrop-blur-sm,
+  .backdrop-blur-md {
+    backdrop-filter: none !important;
+    -webkit-backdrop-filter: none !important;
+  }
+
+  /* Rounded corners - reduce for cleaner print */
+  .rounded-2xl {
+    border-radius: 3mm !important;
+  }
+
+  .rounded-xl {
+    border-radius: 2mm !important;
+  }
+
+  .rounded-lg {
+    border-radius: 1.5mm !important;
+  }
+
+  /* Ensure text is readable */
+  p, li, span, div {
+    orphans: 3;
+    widows: 3;
+  }
+
+  /* Font sizes */
+  .text-7xl {
+    font-size: 48pt !important;
+  }
+
+  .text-4xl {
+    font-size: 28pt !important;
+  }
+
+  .text-3xl {
+    font-size: 22pt !important;
+  }
+
+  .text-2xl {
+    font-size: 18pt !important;
+  }
+
+  .text-xl {
+    font-size: 14pt !important;
+  }
+
+  .text-lg {
+    font-size: 12pt !important;
+  }
+
+  .text-sm {
+    font-size: 10pt !important;
+  }
+
+  .text-xs {
+    font-size: 8pt !important;
+  }
+
+  /* Padding adjustments */
+  .p-8 {
+    padding: 8mm !important;
+  }
+
+  .p-6 {
+    padding: 6mm !important;
+  }
+
+  .p-4 {
+    padding: 4mm !important;
+  }
+
+  .p-3 {
+    padding: 3mm !important;
+  }
+
+  /* Gap adjustments */
+  .gap-6 {
+    gap: 6mm !important;
+  }
+
+  .gap-4 {
+    gap: 4mm !important;
+  }
+
+  .gap-3 {
+    gap: 3mm !important;
+  }
+
+  .gap-2 {
+    gap: 2mm !important;
+  }
+}

@@ -1,4 +1,4 @@
-# Ensenar ML Frontend
+# Ensenar Frontend
 
 A modern, dark-themed React application for predicting student academic performance across multiple subjects using machine learning.
 
