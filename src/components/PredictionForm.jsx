@@ -1,4 +1,5 @@
 import { useState, useEffect } from 'react';
+import { motion } from 'framer-motion';
 import FormInput from './FormInput';
 import FormSelect from './FormSelect';
 import LoadingSpinner from './LoadingSpinner';
@@ -125,49 +126,98 @@ export default function PredictionForm() {
   }
 
   return (
-    <div className="card p-8">
-      <div className="mb-8 text-center">
-        <h2 className="text-3xl font-bold text-primary-400 mb-2">Student Performance Prediction</h2>
-        <p className="text-gray-400">Enter student information to predict academic performance</p>
-      </div>
+    <motion.div 
+      initial={{ opacity: 0, y: 20 }}
+      animate={{ opacity: 1, y: 0 }}
+      transition={{ duration: 0.5 }}
+      className="card p-8"
+    >
+      {/* Header */}
+      <motion.div
+        initial={{ y: -20, opacity: 0 }}
+        animate={{ y: 0, opacity: 1 }}
+        transition={{ delay: 0.2 }}
+        className="mb-8 text-center"
+      >
+        <div className="flex items-center justify-center gap-3 mb-4">
+          <div className="w-12 h-12 bg-gradient-to-br from-purple-500 to-blue-500 rounded-lg flex items-center justify-center shadow-lg shadow-purple-500/30 animate-pulse-glow">
+            <svg className="w-7 h-7 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2m-3 7h3m-3 4h3m-6-4h.01M9 16h.01" />
+            </svg>
+          </div>
+        </div>
+        <h2 className="text-4xl font-bold gradient-text mb-3">Student Performance Prediction</h2>
+        <p className="text-gray-400 text-lg">Enter student information to get AI-powered predictions</p>
+        <div className="flex items-center justify-center gap-2 mt-3">
+          <span className="ai-badge">🤖 Machine Learning</span>
+          <span className="ai-badge">📊 Data Analysis</span>
+          <span className="ai-badge">🎯 Personalized</span>
+        </div>
+      </motion.div>
 
       {alert && (
-        <div className="mb-6">
+        <motion.div
+          initial={{ opacity: 0, y: -10 }}
+          animate={{ opacity: 1, y: 0 }}
+          className="mb-6"
+        >
           <Alert type={alert.type} message={alert.message} onClose={() => setAlert(null)} />
-        </div>
+        </motion.div>
       )}
 
-      <form onSubmit={handleSubmit} className="space-y-6">
+      <form onSubmit={handleSubmit} className="space-y-8">
         {/* Stream and Subject Selection */}
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-          <FormSelect
-            label="Stream"
-            name="Stream"
-            value={formData.Stream}
-            onChange={handleChange}
-            options={['Mathematics', 'Biology', 'Commerce']}
-            error={errors.Stream}
-            placeholder="Select stream"
-            required
-          />
+        <motion.div
+          initial={{ x: -20, opacity: 0 }}
+          animate={{ x: 0, opacity: 1 }}
+          transition={{ delay: 0.3 }}
+        >
+          <div className="mb-4 flex items-center gap-2">
+            <div className="w-8 h-8 bg-gradient-to-br from-purple-500 to-blue-500 rounded-lg flex items-center justify-center text-white font-bold text-sm">
+              1
+            </div>
+            <h3 className="text-xl font-bold text-white">Academic Details</h3>
+          </div>
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-6 pl-10">
+            <FormSelect
+              label="Stream"
+              name="Stream"
+              value={formData.Stream}
+              onChange={handleChange}
+              options={['Mathematics', 'Biology', 'Commerce']}
+              error={errors.Stream}
+              placeholder="Select stream"
+              required
+            />
 
-          <FormSelect
-            label="Subject"
-            name="Subject"
-            value={formData.Subject}
-            onChange={handleChange}
-            options={availableSubjects}
-            error={errors.Subject}
-            placeholder={formData.Stream ? 'Select subject' : 'Select stream first'}
-            disabled={!formData.Stream}
-            required
-          />
-        </div>
+            <FormSelect
+              label="Subject"
+              name="Subject"
+              value={formData.Subject}
+              onChange={handleChange}
+              options={availableSubjects}
+              error={errors.Subject}
+              placeholder={formData.Stream ? 'Select subject' : 'Select stream first'}
+              disabled={!formData.Stream}
+              required
+            />
+          </div>
+        </motion.div>
 
         {/* Personal Information */}
-        <div className="border-t border-gray-700 pt-6">
-          <h3 className="text-lg font-semibold text-gray-200 mb-4">Personal Information</h3>
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+        <motion.div
+          initial={{ x: -20, opacity: 0 }}
+          animate={{ x: 0, opacity: 1 }}
+          transition={{ delay: 0.4 }}
+          className="border-t border-gray-700/50 pt-6"
+        >
+          <div className="mb-4 flex items-center gap-2">
+            <div className="w-8 h-8 bg-gradient-to-br from-purple-500 to-blue-500 rounded-lg flex items-center justify-center text-white font-bold text-sm">
+              2
+            </div>
+            <h3 className="text-xl font-bold text-white">Personal Information</h3>
+          </div>
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-6 pl-10">
             <FormSelect
               label="Gender"
               name="Gender"
@@ -188,12 +238,22 @@ export default function PredictionForm() {
               required
             />
           </div>
-        </div>
+        </motion.div>
 
         {/* Social Media Usage */}
-        <div className="border-t border-gray-700 pt-6">
-          <h3 className="text-lg font-semibold text-gray-200 mb-4">Social Media Usage</h3>
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+        <motion.div
+          initial={{ x: -20, opacity: 0 }}
+          animate={{ x: 0, opacity: 1 }}
+          transition={{ delay: 0.5 }}
+          className="border-t border-gray-700/50 pt-6"
+        >
+          <div className="mb-4 flex items-center gap-2">
+            <div className="w-8 h-8 bg-gradient-to-br from-purple-500 to-blue-500 rounded-lg flex items-center justify-center text-white font-bold text-sm">
+              3
+            </div>
+            <h3 className="text-xl font-bold text-white">Social Media Usage</h3>
+          </div>
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-6 pl-10">
             <FormSelect
               label="Social Media Platform"
               name="Social Media Platform"
@@ -242,12 +302,22 @@ export default function PredictionForm() {
               required
             />
           </div>
-        </div>
+        </motion.div>
 
         {/* Study Habits */}
-        <div className="border-t border-gray-700 pt-6">
-          <h3 className="text-lg font-semibold text-gray-200 mb-4">Study Habits</h3>
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+        <motion.div
+          initial={{ x: -20, opacity: 0 }}
+          animate={{ x: 0, opacity: 1 }}
+          transition={{ delay: 0.6 }}
+          className="border-t border-gray-700/50 pt-6"
+        >
+          <div className="mb-4 flex items-center gap-2">
+            <div className="w-8 h-8 bg-gradient-to-br from-purple-500 to-blue-500 rounded-lg flex items-center justify-center text-white font-bold text-sm">
+              4
+            </div>
+            <h3 className="text-xl font-bold text-white">Study Habits</h3>
+          </div>
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-6 pl-10">
             <FormInput
               label="Sleep Hours (per day)"
               name="Sleep Hours"
@@ -291,7 +361,7 @@ export default function PredictionForm() {
             />
           </div>
           
-          <div className="grid grid-cols-1 gap-6 mt-6">
+          <div className="grid grid-cols-1 gap-6 mt-6 pl-10">
             <FormSelect
               label="Timing Behavior"
               name="Timing Behavior"
@@ -308,12 +378,22 @@ export default function PredictionForm() {
               required
             />
           </div>
-        </div>
+        </motion.div>
 
         {/* Past Performance */}
-        <div className="border-t border-gray-700 pt-6">
-          <h3 className="text-lg font-semibold text-gray-200 mb-4">Past Performance</h3>
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+        <motion.div
+          initial={{ x: -20, opacity: 0 }}
+          animate={{ x: 0, opacity: 1 }}
+          transition={{ delay: 0.7 }}
+          className="border-t border-gray-700/50 pt-6"
+        >
+          <div className="mb-4 flex items-center gap-2">
+            <div className="w-8 h-8 bg-gradient-to-br from-purple-500 to-blue-500 rounded-lg flex items-center justify-center text-white font-bold text-sm">
+              5
+            </div>
+            <h3 className="text-xl font-bold text-white">Past Performance</h3>
+          </div>
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-6 pl-10">
             <FormInput
               label="Recent Past Paper (%)"
               name="Recent Past Paper"
@@ -356,24 +436,48 @@ export default function PredictionForm() {
               required
             />
           </div>
-        </div>
+        </motion.div>
 
         {/* Submit Buttons */}
-        <div className="flex gap-4 pt-6">
-          <button type="submit" disabled={loading} className="btn-primary flex-1">
-            {loading ? 'Predicting...' : 'Predict Performance'}
+        <motion.div
+          initial={{ y: 20, opacity: 0 }}
+          animate={{ y: 0, opacity: 1 }}
+          transition={{ delay: 0.8 }}
+          className="flex gap-4 pt-6"
+        >
+          <button type="submit" disabled={loading} className="btn-primary flex-1 flex items-center justify-center gap-2">
+            {loading ? (
+              <>
+                <div className="w-5 h-5 border-2 border-white border-t-transparent rounded-full animate-spin"></div>
+                Analyzing with AI...
+              </>
+            ) : (
+              <>
+                <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 10V3L4 14h7v7l9-11h-7z" />
+                </svg>
+                Predict Performance
+              </>
+            )}
           </button>
-          <button type="button" onClick={handleReset} className="btn-secondary">
+          <button type="button" onClick={handleReset} className="btn-secondary flex items-center gap-2">
+            <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15" />
+            </svg>
             Reset
           </button>
-        </div>
+        </motion.div>
       </form>
 
       {loading && (
-        <div className="mt-8">
+        <motion.div
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          className="mt-8"
+        >
           <LoadingSpinner />
-        </div>
+        </motion.div>
       )}
-    </div>
+    </motion.div>
   );
 }
