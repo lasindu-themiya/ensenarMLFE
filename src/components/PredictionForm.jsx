@@ -40,6 +40,7 @@ export default function PredictionForm() {
   const [alert, setAlert] = useState(null);
   const [result, setResult] = useState(null);
   const [availableSubjects, setAvailableSubjects] = useState([]);
+  const [apiFormData, setApiFormData] = useState(null);
 
   // Update available subjects when stream changes
   useEffect(() => {
@@ -102,6 +103,7 @@ export default function PredictionForm() {
 
       const response = await makePrediction(formData.Subject, apiData);
       setResult(response.prediction);
+      setApiFormData(apiData); // Store the API data for deep learning
       setAlert({ type: 'success', message: 'Prediction completed successfully!' });
     } catch (error) {
       setAlert({ type: 'error', message: error.message });
@@ -114,11 +116,12 @@ export default function PredictionForm() {
     setFormData(INITIAL_FORM_STATE);
     setErrors({});
     setResult(null);
+    setApiFormData(null);
     setAlert(null);
   };
 
   if (result) {
-    return <PredictionResult result={result} onReset={handleReset} />;
+    return <PredictionResult result={result} onReset={handleReset} formData={apiFormData} />;
   }
 
   return (

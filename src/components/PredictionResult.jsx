@@ -1,4 +1,6 @@
-export default function PredictionResult({ result, onReset }) {
+import DeepLearningRecommendation from './DeepLearningRecommendation';
+
+export default function PredictionResult({ result, onReset, formData }) {
   if (!result) return null;
 
   const getGradeColor = (grade) => {
@@ -84,6 +86,9 @@ export default function PredictionResult({ result, onReset }) {
           </div>
         </div>
       )}
+
+      {/* Deep Learning Recommendations */}
+      {formData && <DeepLearningRecommendation formData={formData} />}
 
       <div className="flex justify-center pt-4">
         <button onClick={onReset} className="btn-secondary">

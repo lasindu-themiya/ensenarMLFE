@@ -31,6 +31,16 @@ export const makePrediction = async (subject, data) => {
   }
 };
 
+// Get deep learning recommendations
+export const getDeepLearningRecommendation = async (data) => {
+  try {
+    const response = await api.post('/api/deeplearning', data);
+    return response.data;
+  } catch (error) {
+    throw new Error(error.response?.data?.error || 'Failed to get recommendations');
+  }
+};
+
 // Health check
 export const checkHealth = async () => {
   try {
