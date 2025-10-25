@@ -1,5 +1,6 @@
 import { motion, AnimatePresence } from 'framer-motion';
 import { useState } from 'react';
+import { padRecommendations, isGeneralRecommendation, getRecommendationCountMessage } from '../utils/recommendationPadding';
 
 const getPriorityColor = (priority) => {
   switch (priority) {
@@ -80,6 +81,12 @@ export default function RecommendationResult({ result, onClose }) {
   const [selectedTab, setSelectedTab] = useState('overview');
   const currentProb = parseFloat(result.grade_a_probability) * 100;
   const projectedProb = result.combined_effect ? parseFloat(result.combined_effect.projected_probability.replace('%', '')) : currentProb;
+
+  // Pad recommendations to ensure consistent 5 items
+  const originalRecommendations = result.prioritized_recommendations || [];
+  const paddedRecommendations = padRecommendations(originalRecommendations);
+  const specificCount = originalRecommendations.length;
+  const countMessage = getRecommendationCountMessage(specificCount, paddedRecommendations.length);
 
   return (
     <motion.div
@@ -268,65 +275,75 @@ export default function RecommendationResult({ result, onClose }) {
           )}
 
           {/* Recommendations Section */}
-          {result.prioritized_recommendations && (
+          {paddedRecommendations.length > 0 && (
             <div className="space-y-4 mb-8 print-section">
               <h2 className="text-2xl font-bold text-white mb-4">🚀 Priority Recommendations</h2>
               <div className="bg-blue-500/10 border border-blue-500/30 rounded-lg p-3 mb-4">
                 <p className="text-blue-300 text-sm">
-                  <strong>{result.prioritized_recommendations.length} AI-identified recommendation{result.prioritized_recommendations.length !== 1 ? 's' : ''}</strong> - The most impactful areas for your improvement
+                  <strong>{countMessage}</strong> - Focus on these high-impact improvements
                 </p>
               </div>
-              {result.prioritized_recommendations.map((rec, index) => (
-                <div
-                  key={index}
-                  className="card p-6"
-                >
-                  <div className="flex items-start gap-4">
-                    <div className={`flex-shrink-0 w-12 h-12 bg-gradient-to-br ${getPriorityColor(rec.priority)} rounded-lg flex items-center justify-center text-white font-bold text-lg`}>
-                      #{index + 1}
-                    </div>
-                    <div className="flex-1">
-                      <div className="flex justify-between items-start mb-3">
-                        <div>
-                          <h3 className="text-xl font-bold text-white">{rec.feature}</h3>
-                          <span className={`inline-block mt-1 text-xs px-3 py-1 rounded-full ${
-                            rec.priority === 'CRITICAL' ? 'bg-red-500/20 text-red-400' :
-                            rec.priority === 'HIGH' ? 'bg-orange-500/20 text-orange-400' :
-                            'bg-yellow-500/20 text-yellow-400'
-                          }`}>
-                            {rec.priority} Priority
-                          </span>
-                        </div>
-                        <div className="text-right">
-                          <div className="text-2xl font-bold text-green-400">{rec.improvement}</div>
-                          <div className="text-xs text-gray-400">Improvement</div>
-                        </div>
+              {paddedRecommendations.map((rec, index) => {
+                const isGeneral = isGeneralRecommendation(rec);
+                return (
+                  <div
+                    key={index}
+                    className={`card p-6 ${isGeneral ? 'bg-gray-800/30 border-gray-600' : ''}`}
+                  >
+                    <div className="flex items-start gap-4">
+                      <div className={`flex-shrink-0 w-12 h-12 bg-gradient-to-br ${getPriorityColor(rec.priority)} rounded-lg flex items-center justify-center text-white font-bold text-lg`}>
+                        #{index + 1}
                       </div>
-                      
-                      <div className="bg-gray-800/50 rounded-lg p-4 mb-3">
-                        <div className="grid grid-cols-2 gap-4 mb-3">
+                      <div className="flex-1">
+                        <div className="flex justify-between items-start mb-3">
                           <div>
-                            <div className="text-xs text-gray-400 mb-1">Current</div>
-                            <div className="text-white font-semibold">{rec.current}</div>
+                            <h3 className="text-xl font-bold text-white flex items-center gap-2">
+                              {rec.feature}
+                              {isGeneral && (
+                                <span className="text-xs bg-gray-600/50 text-gray-300 px-2 py-1 rounded">
+                                  General Tip
+                                </span>
+                              )}
+                            </h3>
+                            <span className={`inline-block mt-1 text-xs px-3 py-1 rounded-full ${
+                              rec.priority === 'CRITICAL' ? 'bg-red-500/20 text-red-400' :
+                              rec.priority === 'HIGH' ? 'bg-orange-500/20 text-orange-400' :
+                              'bg-yellow-500/20 text-yellow-400'
+                            }`}>
+                              {rec.priority} Priority
+                            </span>
                           </div>
-                          <div>
-                            <div className="text-xs text-gray-400 mb-1">Suggested</div>
-                            <div className="text-green-400 font-semibold">{rec.suggested}</div>
+                          <div className="text-right">
+                            <div className="text-2xl font-bold text-green-400">{rec.improvement}</div>
+                            <div className="text-xs text-gray-400">Improvement</div>
                           </div>
                         </div>
-                        <div className="text-sm text-gray-300">
-                          <strong className="text-white">Why: </strong>{rec.reason}
+                        
+                        <div className="bg-gray-800/50 rounded-lg p-4 mb-3">
+                          <div className="grid grid-cols-2 gap-4 mb-3">
+                            <div>
+                              <div className="text-xs text-gray-400 mb-1">Current</div>
+                              <div className="text-white font-semibold">{rec.current}</div>
+                            </div>
+                            <div>
+                              <div className="text-xs text-gray-400 mb-1">Suggested</div>
+                              <div className="text-green-400 font-semibold">{rec.suggested}</div>
+                            </div>
+                          </div>
+                          <div className="text-sm text-gray-300">
+                            <strong className="text-white">Why: </strong>{rec.reason}
+                          </div>
                         </div>
-                      </div>
 
-                      <div className="flex items-center justify-between bg-blue-500/10 rounded-lg p-3 border border-blue-500/30">
-                        <span className="text-sm text-gray-300">New Success Rate:</span>
-                        <span className="text-lg font-bold text-blue-400">{rec.new_probability}</span>
+                        <div className="flex items-center justify-between bg-blue-500/10 rounded-lg p-3 border border-blue-500/30">
+                          <span className="text-sm text-gray-300">New Success Rate:</span>
+                          <span className="text-lg font-bold text-blue-400">{rec.new_probability}</span>
+                        </div>
                       </div>
                     </div>
                   </div>
-                </div>
-              ))}
+                );
+              })}
             </div>
           )}
 
@@ -398,7 +415,7 @@ export default function RecommendationResult({ result, onClose }) {
             </motion.div>
           )}
 
-          {selectedTab === 'recommendations' && result.prioritized_recommendations && (
+          {selectedTab === 'recommendations' && paddedRecommendations.length > 0 && (
             <motion.div
               key="recommendations"
               initial={{ opacity: 0, x: -20 }}
@@ -418,70 +435,79 @@ export default function RecommendationResult({ result, onClose }) {
                   </svg>
                   <div className="flex-1">
                     <p className="text-blue-300 text-sm font-medium">
-                      <strong>AI Analysis:</strong> {result.prioritized_recommendations.length} prioritized recommendation{result.prioritized_recommendations.length !== 1 ? 's' : ''} identified
+                      <strong>{countMessage}</strong>
                     </p>
                     <p className="text-blue-400/80 text-xs mt-1">
-                      Our neural network has identified the most impactful areas for improvement based on your specific data. 
-                      {result.prioritized_recommendations.length < 5 && " Some subjects may have fewer recommendations when current performance is already strong in certain areas."}
+                      AI-specific recommendations target your unique weak points. General tips supplement when fewer specific issues are found.
                     </p>
                   </div>
                 </div>
               </motion.div>
 
-              {result.prioritized_recommendations.map((rec, index) => (
-                <motion.div
-                  key={index}
-                  initial={{ opacity: 0, y: 20 }}
-                  animate={{ opacity: 1, y: 0 }}
-                  transition={{ delay: index * 0.1 }}
-                  className="card p-6 hover:shadow-xl transition-shadow"
-                >
-                  <div className="flex items-start gap-4">
-                    <div className={`flex-shrink-0 w-12 h-12 bg-gradient-to-br ${getPriorityColor(rec.priority)} rounded-lg flex items-center justify-center text-white font-bold text-lg`}>
-                      #{index + 1}
-                    </div>
-                    <div className="flex-1">
-                      <div className="flex justify-between items-start mb-3">
-                        <div>
-                          <h3 className="text-xl font-bold text-white">{rec.feature}</h3>
-                          <span className={`inline-block mt-1 text-xs px-3 py-1 rounded-full ${
-                            rec.priority === 'CRITICAL' ? 'bg-red-500/20 text-red-400' :
-                            rec.priority === 'HIGH' ? 'bg-orange-500/20 text-orange-400' :
-                            'bg-yellow-500/20 text-yellow-400'
-                          }`}>
-                            {rec.priority} Priority
-                          </span>
-                        </div>
-                        <div className="text-right">
-                          <div className="text-2xl font-bold text-green-400">{rec.improvement}</div>
-                          <div className="text-xs text-gray-400">Improvement</div>
-                        </div>
+              {paddedRecommendations.map((rec, index) => {
+                const isGeneral = isGeneralRecommendation(rec);
+                return (
+                  <motion.div
+                    key={index}
+                    initial={{ opacity: 0, y: 20 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    transition={{ delay: index * 0.1 }}
+                    className={`card p-6 hover:shadow-xl transition-shadow ${isGeneral ? 'bg-gray-800/30 border-gray-600/50' : ''}`}
+                  >
+                    <div className="flex items-start gap-4">
+                      <div className={`flex-shrink-0 w-12 h-12 bg-gradient-to-br ${getPriorityColor(rec.priority)} rounded-lg flex items-center justify-center text-white font-bold text-lg ${isGeneral ? 'opacity-70' : ''}`}>
+                        #{index + 1}
                       </div>
-                      
-                      <div className="bg-gray-800/50 rounded-lg p-4 mb-3">
-                        <div className="grid grid-cols-2 gap-4 mb-3">
+                      <div className="flex-1">
+                        <div className="flex justify-between items-start mb-3">
                           <div>
-                            <div className="text-xs text-gray-400 mb-1">Current</div>
-                            <div className="text-white font-semibold">{rec.current}</div>
+                            <h3 className="text-xl font-bold text-white flex items-center gap-2">
+                              {rec.feature}
+                              {isGeneral && (
+                                <span className="text-xs bg-gray-600/50 text-gray-300 px-2 py-1 rounded">
+                                  General Tip
+                                </span>
+                              )}
+                            </h3>
+                            <span className={`inline-block mt-1 text-xs px-3 py-1 rounded-full ${
+                              rec.priority === 'CRITICAL' ? 'bg-red-500/20 text-red-400' :
+                              rec.priority === 'HIGH' ? 'bg-orange-500/20 text-orange-400' :
+                              'bg-yellow-500/20 text-yellow-400'
+                            }`}>
+                              {rec.priority} Priority
+                            </span>
                           </div>
-                          <div>
-                            <div className="text-xs text-gray-400 mb-1">Suggested</div>
-                            <div className="text-green-400 font-semibold">{rec.suggested}</div>
+                          <div className="text-right">
+                            <div className="text-2xl font-bold text-green-400">{rec.improvement}</div>
+                            <div className="text-xs text-gray-400">Improvement</div>
                           </div>
                         </div>
-                        <div className="text-sm text-gray-300">
-                          <strong className="text-white">Why: </strong>{rec.reason}
+                        
+                        <div className="bg-gray-800/50 rounded-lg p-4 mb-3">
+                          <div className="grid grid-cols-2 gap-4 mb-3">
+                            <div>
+                              <div className="text-xs text-gray-400 mb-1">Current</div>
+                              <div className="text-white font-semibold">{rec.current}</div>
+                            </div>
+                            <div>
+                              <div className="text-xs text-gray-400 mb-1">Suggested</div>
+                              <div className="text-green-400 font-semibold">{rec.suggested}</div>
+                            </div>
+                          </div>
+                          <div className="text-sm text-gray-300">
+                            <strong className="text-white">Why: </strong>{rec.reason}
+                          </div>
                         </div>
-                      </div>
 
-                      <div className="flex items-center justify-between bg-blue-500/10 rounded-lg p-3 border border-blue-500/30">
-                        <span className="text-sm text-gray-300">New Success Rate:</span>
-                        <span className="text-lg font-bold text-blue-400">{rec.new_probability}</span>
+                        <div className="flex items-center justify-between bg-blue-500/10 rounded-lg p-3 border border-blue-500/30">
+                          <span className="text-sm text-gray-300">New Success Rate:</span>
+                          <span className="text-lg font-bold text-blue-400">{rec.new_probability}</span>
+                        </div>
                       </div>
                     </div>
-                  </div>
-                </motion.div>
-              ))}
+                  </motion.div>
+                );
+              })}
             </motion.div>
           )}
 
