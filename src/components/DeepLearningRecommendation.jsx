@@ -66,7 +66,8 @@ export default function DeepLearningRecommendation({ formData }) {
             </h3>
             <p className="text-gray-300 mb-4">
               Get personalized improvement strategies powered by our advanced 5-layer neural network. 
-              Discover your path to Grade A with data-driven insights!
+              Our AI analyzes your specific situation and identifies the most impactful areas for improvement - 
+              the number of recommendations varies based on your current performance profile.
             </p>
             
             <div className="grid grid-cols-1 md:grid-cols-3 gap-3 mb-4">

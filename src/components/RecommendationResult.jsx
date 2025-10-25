@@ -271,6 +271,11 @@ export default function RecommendationResult({ result, onClose }) {
           {result.prioritized_recommendations && (
             <div className="space-y-4 mb-8 print-section">
               <h2 className="text-2xl font-bold text-white mb-4">🚀 Priority Recommendations</h2>
+              <div className="bg-blue-500/10 border border-blue-500/30 rounded-lg p-3 mb-4">
+                <p className="text-blue-300 text-sm">
+                  <strong>{result.prioritized_recommendations.length} AI-identified recommendation{result.prioritized_recommendations.length !== 1 ? 's' : ''}</strong> - The most impactful areas for your improvement
+                </p>
+              </div>
               {result.prioritized_recommendations.map((rec, index) => (
                 <div
                   key={index}
@@ -401,6 +406,28 @@ export default function RecommendationResult({ result, onClose }) {
               exit={{ opacity: 0, x: 20 }}
               className="space-y-4"
             >
+              {/* Info message about recommendation count */}
+              <motion.div
+                initial={{ opacity: 0, y: -10 }}
+                animate={{ opacity: 1, y: 0 }}
+                className="bg-blue-500/10 border border-blue-500/30 rounded-lg p-4 mb-4"
+              >
+                <div className="flex items-start gap-3">
+                  <svg className="w-5 h-5 text-blue-400 flex-shrink-0 mt-0.5" fill="currentColor" viewBox="0 0 20 20">
+                    <path fillRule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7-4a1 1 0 11-2 0 1 1 0 012 0zM9 9a1 1 0 000 2v3a1 1 0 001 1h1a1 1 0 100-2v-3a1 1 0 00-1-1H9z" clipRule="evenodd" />
+                  </svg>
+                  <div className="flex-1">
+                    <p className="text-blue-300 text-sm font-medium">
+                      <strong>AI Analysis:</strong> {result.prioritized_recommendations.length} prioritized recommendation{result.prioritized_recommendations.length !== 1 ? 's' : ''} identified
+                    </p>
+                    <p className="text-blue-400/80 text-xs mt-1">
+                      Our neural network has identified the most impactful areas for improvement based on your specific data. 
+                      {result.prioritized_recommendations.length < 5 && " Some subjects may have fewer recommendations when current performance is already strong in certain areas."}
+                    </p>
+                  </div>
+                </div>
+              </motion.div>
+
               {result.prioritized_recommendations.map((rec, index) => (
                 <motion.div
                   key={index}
